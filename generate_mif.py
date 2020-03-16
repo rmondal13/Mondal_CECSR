@@ -3,8 +3,6 @@ from pathlib import Path
 
 # Get command line arguments
 parser = argparse.ArgumentParser(description='Generate Memory Initialization File (mif) from 153.6 KB of data')
-parser.add_argument('-m', '--mif', default='.', help='Use to specify where to output mif file. If not used, mif file will output to CWD.',
-					metavar='path')
 parser.add_argument('-f', '--file', help='Use to generate a mif file from a provided file. If not used, mif file will use random data.',
 					metavar='path_to_file')
 args = parser.parse_args()
