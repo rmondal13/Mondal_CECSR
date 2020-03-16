@@ -1,4 +1,5 @@
-import argparse, os
+import argparse, os, sys
+from pathlib import Path
 
 # Get command line arguments
 parser = argparse.ArgumentParser(description='Generate Memory Initialization File (mif) from 153.6 KB of data')
@@ -12,7 +13,17 @@ args = parser.parse_args()
 if args.file is None:
 	data = os.urandom(320*240*2)
 else:
-	print("Getting data from file")
+	my_file = Path(args.file)
+	if my_file.is_file():
+		size = my_file.stat().st_size
+		if size > 153600:
+			sys.exit('Error: File size exceeds 153.6 KB. Exiting program...')
+		else:
+			data = open(args.file, 'rb').read()
+			for i in range(0, 153600-size):
+				data += b'\x00'
+	else:
+		sys.exit('Error: File not found. Exiting program...')
 
 # open initial_data.mif
 mif = open('initial_data.mif', 'w')
@@ -36,3 +47,4 @@ for n in range(0, 9600):
 # close initial_data.mif
 mif.write("END;\n")
 mif.close()
+print("Generated initial_data.mif")
